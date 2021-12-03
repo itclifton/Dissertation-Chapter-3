@@ -110,7 +110,6 @@ Fig6<-ggplot(data=data1, aes(x=treatment, y=HR100))+
            size=6)
 #ggsave(path=path, filename="HR100.jpeg", width=5, height=5, plot=Fig6)
 
-
 # Movement
 aggregate(SumDailyMovement~treatment, mean, data=data1)
 aggregate(SumDailyMovement~treatment, st.err, data=data1)
@@ -151,7 +150,7 @@ Fig4<-ggplot(data=data1.dee, aes(x=treatment, y=DEE))+
   ylab("DEE (J-g-d)")
 #ggsave(path=path, filename="DEE.jpeg", width=5, height=5, plot=Fig4)
 
-## Phys stuff ----
+## Cort Data ----
 CortData<-read.csv("Corticosterone2020Diss.csv")
 aggregate(Cort~Time+Treatment, length, data=CortData)
 aggregate(Cort~Time+Treatment, range, data=CortData)
