@@ -1,0 +1,61 @@
+"Treatment","ID","Bins","Lux"
+"Control",2008,"full sun",451
+"Longitudinal",2010,"full sun",159
+"Longitudinal",2011,"full sun",464
+"Control",2019,"full sun",187
+"Transplant",2020,"full sun",226
+"Transplant",2021,"full sun",138
+"Control",2024,"full sun",315
+"Transplant",2027,"full sun",75
+"Transplant",2028,"full sun",248
+"Transplant",2032,"full sun",11
+"Control",2008,"part sun",469
+"Longitudinal",2010,"part sun",437
+"Longitudinal",2011,"part sun",480
+"Control",2019,"part sun",461
+"Transplant",2020,"part sun",450
+"Transplant",2021,"part sun",378
+"Control",2024,"part sun",466
+"Transplant",2027,"part sun",107
+"Transplant",2028,"part sun",595
+"Transplant",2032,"part sun",98
+"Control",2008,"part shade",564
+"Longitudinal",2010,"part shade",706
+"Longitudinal",2011,"part shade",788
+"Control",2019,"part shade",994
+"Transplant",2020,"part shade",1082
+"Transplant",2021,"part shade",803
+"Control",2024,"part shade",1005
+"Transplant",2027,"part shade",570
+"Transplant",2028,"part shade",875
+"Transplant",2032,"part shade",225
+"Control",2008,"shade",11
+"Longitudinal",2010,"shade",190
+"Longitudinal",2011,"shade",92
+"Control",2019,"shade",136
+"Transplant",2020,"shade",91
+"Transplant",2021,"shade",147
+"Control",2024,"shade",59
+"Transplant",2027,"shade",68
+"Transplant",2028,"shade",104
+"Transplant",2032,"shade",61
+"Control",2008,"shelter",97
+"Longitudinal",2010,"shelter",431
+"Longitudinal",2011,"shelter",322
+"Control",2019,"shelter",241
+"Transplant",2020,"shelter",156
+"Transplant",2021,"shelter",179
+"Control",2024,"shelter",377
+"Transplant",2027,"shelter",122
+"Transplant",2028,"shelter",173
+"Transplant",2032,"shelter",87
+"Control",2008,"buried",748
+"Longitudinal",2010,"buried",417
+"Longitudinal",2011,"buried",194
+"Control",2019,"buried",321
+"Transplant",2020,"buried",335
+"Transplant",2021,"buried",695
+"Control",2024,"buried",118
+"Transplant",2027,"buried",50
+"Transplant",2028,"buried",345
+"Transplant",2032,"buried",326
