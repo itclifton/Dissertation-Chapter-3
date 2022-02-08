@@ -26,6 +26,10 @@ length(data1.whole$id)
 aggregate(CaptureMass~Sex, length, data=data1.whole)
 
 # Change in Mass
+# Add grams per day measure
+gpd.data<-read.csv("gpd.csv") 
+data1.whole<-merge(data1.whole, gpd.data, by="id")
+
 aggregate(PercentChangeperDay~treatment, length, data=data1.whole)
 a<-aggregate(PercentChangeperDay~treatment, mean, data=data1.whole)
 a.se<-aggregate(PercentChangeperDay~treatment, st.err, data=data1.whole)
@@ -36,25 +40,38 @@ m1=aov(PercentChangeperDay~treatment, data=data1.whole)
 summary(m1)
 TukeyHSD(m1)
 
+summary(lm(g.day~ReleaseMass, data=data1.whole))
+m2=aov(g.day~treatment, data=data1.whole)
+summary(m2)
+em.m2<-emmeans(m2, c("treatment"))
+summary(em.m2)
+contrast(em.m2, 'tukey')
+
+# Tolerance acclimation
+data1.whole.TA<-subset(data1.whole, id!="2001" & id!="2004") # 2001 was stressed before CTmax trial and 2004 was injured during tracking
 # Change in CTmax
-mean(data1.whole$InitialMax)
-st.err(data1.whole$InitialMax)
-aggregate(ChangeInMax~treatment, length, data=data1.whole)
-aggregate(ChangeInMax~treatment, mean, data=data1.whole)
-aggregate(ChangeInMax~treatment, st.err, data=data1.whole)
-summary(aov(ChangeInMax~treatment, data=data1.whole))
-shapiro.test(data1.whole$ChangeInMax)
-bartlett.test(ChangeInMax~treatment, data=data1.whole)
+mean(data1.whole.TA$InitialMax)
+st.err(data1.whole.TA$InitialMax)
+mean(data1.whole.TA$FinalMax)
+st.err(data1.whole.TA$FinalMax)
+aggregate(ChangeInMax~treatment, length, data=data1.whole.TA)
+aggregate(ChangeInMax~treatment, mean, data=data1.whole.TA)
+aggregate(ChangeInMax~treatment, st.err, data=data1.whole.TA)
+summary(aov(ChangeInMax~treatment, data=data1.whole.TA))
+shapiro.test(data1.whole.TA$ChangeInMax)
+bartlett.test(ChangeInMax~treatment, data=data1.whole.TA)
 
 # Change in CTmin
-mean(data1.whole$InitialMin)
-st.err(data1.whole$InitialMin)
-aggregate(ChangeInMin~treatment, length, data=data1.whole)
-aggregate(ChangeInMin~treatment, mean, data=data1.whole)
-aggregate(ChangeInMin~treatment, length, data=data1.whole)
-summary(aov(ChangeInMin~treatment, data=data1.whole))
-shapiro.test(data1.whole$ChangeInMin)
-bartlett.test(ChangeInMin~treatment, data=data1.whole)
+mean(data1.whole.TA$InitialMin)
+st.err(data1.whole.TA$InitialMin)
+mean(data1.whole.TA$FinalMin)
+st.err(data1.whole.TA$FinalMin)
+aggregate(ChangeInMin~treatment, length, data=data1.whole.TA)
+aggregate(ChangeInMin~treatment, mean, data=data1.whole.TA)
+aggregate(ChangeInMin~treatment, length, data=data1.whole.TA)
+summary(aov(ChangeInMin~treatment, data=data1.whole.TA))
+shapiro.test(data1.whole.TA$ChangeInMin)
+bartlett.test(ChangeInMin~treatment, data=data1.whole.TA)
 
 # Home Range
 aggregate(HR100~treatment, length, data=data1)
@@ -122,6 +139,7 @@ All.Night<-rbind(All.Night1, All.Night2)
 
 # Overall
 aggregate(Temperature~Site, mean, data=All)
+aggregate(Temperature~Site, sd, data=All)
 aggregate(Temperature~Site, st.err, data=All)
 All.int<-subset(All, Site=="Intersection")
 All.high<-subset(All, Site=="High")
@@ -129,6 +147,7 @@ t.test(All.int$Temperature, All.high$Temperature)
 
 # Daytime
 aggregate(Temperature~Site, mean, data=All.Day)
+aggregate(Temperature~Site, sd, data=All.Day)
 aggregate(Temperature~Site, st.err, data=All.Day)
 All.Day.int<-subset(All.Day, Site=="Intersection")
 All.Day.high<-subset(All.Day, Site=="High")
@@ -136,6 +155,7 @@ t.test(All.Day.int$Temperature, All.Day.high$Temperature)
 
 # Nighttime
 aggregate(Temperature~Site, mean, data=All.Night)
+aggregate(Temperature~Site, sd, data=All.Night)
 aggregate(Temperature~Site, st.err, data=All.Night)
 All.Night.int<-subset(All.Night, Site=="Intersection")
 All.Night.high<-subset(All.Night, Site=="High")
