@@ -416,7 +416,7 @@ Fig7<-ggplot(data=dataPlot.1, aes(x=Treatment, y=mean, ymin=dataPlot.1$'2.5%', y
            size=6)
 #ggsave(path=path, "Fig7.jpeg", width=5, height=5, plot=Fig7)
 
-# Physiological and Behavioral Panel Plot
+# Physiological and Behavioral Panel Plot- New Figure 2
 Panel=plot_grid(Fig3, Fig4, Fig5, Fig6, Fig7,
                        labels = "AUTO", ncol = 2, nrow=3, align="v")
 #ggsave(path=path,"PanelFigure2.jpeg", width=10, height=15, plot=Panel)
