@@ -13,7 +13,9 @@ library(nnet)
 library(reshape2)
 library(MASS)
 library(ggplot2)
+library(cowplot)
 st.err = function(x) {sd(x)/sqrt(length(x))}
+path<-"/Users/ianclifton/Desktop/Research/PhD/Chapters/Selection/Figures"
 
 ## Whole animal metrics ----
 data1<-read.csv("WholeAnimal2020Diss.csv")
@@ -349,7 +351,7 @@ Fig4<-ggplot(data=data1.dee, aes(x=treatment, y=DEE))+
   scale_x_discrete(labels = c('Control', 'Transplant'))+
   annotate("text",
            x = c(1, 2),
-           y = c(160, 108),
+           y = c(168, 115),
            label = c("A", "B"), fontface="bold",
            size=6)+
   xlab("Treatment Group")+
@@ -366,7 +368,7 @@ Fig5<-ggplot(data=CortData, aes(x=Treatment, y=Cort, fill=Time))+
   theme(axis.title.x=element_blank())+
   theme(panel.grid.major=element_line(colour="#FFFFFF"),panel.grid.minor=element_line(colour="#FFFFFF"))+
   theme(axis.text=element_text(size=12,face="bold"), axis.title=element_text(size=14,face="bold"))+
-  theme(legend.position="bottom")+
+  theme(legend.position=c(0.8,0.8))+
   xlab("")+
   ylab("Corticosterone (ng/mL)")+
   annotate("text",
@@ -412,5 +414,11 @@ Fig7<-ggplot(data=dataPlot.1, aes(x=Treatment, y=mean, ymin=dataPlot.1$'2.5%', y
            y = c((dataPlot.1[1,11]+(0.002)), (dataPlot.1[2,11]+0.002), (dataPlot.1[3,11]+0.002)),
            label = c("A", "A", "B"),
            size=6)
-#ggsave("Fig7.jpeg", width=5, height=5, plot=Fig7)
+#ggsave(path=path, "Fig7.jpeg", width=5, height=5, plot=Fig7)
+
+# Physiological and Behavioral Panel Plot
+Panel=plot_grid(Fig3, Fig4, Fig5, Fig6, Fig7,
+                       labels = "AUTO", ncol = 2, nrow=3, align="v")
+#ggsave(path=path,"PanelFigure2.jpeg", width=10, height=15, plot=Panel)
+
 
