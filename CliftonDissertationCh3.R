@@ -54,6 +54,7 @@ data1.whole.TA<-subset(data1.whole, id!="2001" & id!="2004") # 2001 was stressed
 # Change in CTmax
 mean(data1.whole.TA$InitialMax)
 st.err(data1.whole.TA$InitialMax)
+summary(aov(InitialMax~treatment, data=data1.whole.TA))
 mean(data1.whole.TA$FinalMax)
 st.err(data1.whole.TA$FinalMax)
 aggregate(ChangeInMax~treatment, length, data=data1.whole.TA)
@@ -66,6 +67,7 @@ bartlett.test(ChangeInMax~treatment, data=data1.whole.TA)
 # Change in CTmin
 mean(data1.whole.TA$InitialMin)
 st.err(data1.whole.TA$InitialMin)
+summary(aov(InitialMin~treatment, data=data1.whole.TA))
 mean(data1.whole.TA$FinalMin)
 st.err(data1.whole.TA$FinalMin)
 aggregate(ChangeInMin~treatment, length, data=data1.whole.TA)
