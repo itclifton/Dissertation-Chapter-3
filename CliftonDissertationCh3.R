@@ -15,7 +15,8 @@ library(MASS)
 library(ggplot2)
 library(cowplot)
 st.err = function(x) {sd(x)/sqrt(length(x))}
-path<-"/Users/ianclifton/Desktop/Research/PhD/Chapters/Selection/Figures"
+path<-"/Users/ianclifton/Desktop/Research- PhD to Present/PhD/Chapters/Selection/Figures"
+
 
 ## Whole animal metrics ----
 data1<-read.csv("WholeAnimal2020Diss.csv")
@@ -86,10 +87,9 @@ colnames(Hr.se)[2]<-"SE"
 HR.m$SE<-Hr.se$SE
 colnames(HR.m)[2]<-"HR100"
 
-shapiro.test(log(data1$HR100))
-bartlett.test(HR100~treatment, data=data1)
+plot(lm(HR100~treatment, data=data1))
 
-aov.HR<-aov(log(HR100)~treatment, data=data1)
+aov.HR<-aov(HR100~treatment, data=data1)
 summary(aov.HR)
 TukeyHSD(aov.HR)
 
@@ -98,9 +98,8 @@ aggregate(SumDailyMovement~treatment, mean, data=data1)
 aggregate(SumDailyMovement~treatment, st.err, data=data1)
 aggregate(AvgDailyMovement~treatment, length, data=data1)
 
-shapiro.test(log(data1$SumDailyMovement))
-bartlett.test(SumDailyMovement~treatment, data=data1)
-summary(aov(log(SumDailyMovement)~treatment, data=data1))
+plot(lm(SumDailyMovement~treatment, data=data1))
+summary(aov(SumDailyMovement~treatment, data=data1))
 
 # DEE
 data1.dee<-subset(data1.whole, treatment!="longitudinal")
@@ -119,14 +118,11 @@ CortData<-read.csv("Corticosterone2020Diss.csv")
 aggregate(Cort~Time+Treatment, length, data=CortData)
 aggregate(Cort~Time+Treatment, range, data=CortData)
 
-shapiro.test(log(CortData$Cort))
-bartlett.test(log(Cort)~Treatment, data=CortData)
-
 cort.m<-aggregate(Cort~Time+Treatment, mean, data=CortData)
 cort.se<-aggregate(Cort~Time+Treatment, st.err, data=CortData)
 cort.m$SE<-cort.se$Cort
 
-m3<-lmer(log(Cort)~Time+Treatment+(1|ID), data=CortData)
+m3<-lmer(Cort~Time+Treatment+(1|ID), data=CortData)
 em.m3<-emmeans(m3, c("Time"))
 summary(em.m3)
 contrast(em.m3, 'tukey')
@@ -322,11 +318,10 @@ InvertFig<-ggplot(InvertData, aes(fill=Order, y=Abundance, x=Site))+
 # Figure 3- Change in mass per day
 Fig3<-ggplot(data=data1.whole, aes(x=treatment, y=PercentChangeperDay))+
   geom_boxplot(outlier.shape=NA)+
-  geom_point(position=position_jitter(seed=2,width=0.15), color="gray")+
+  geom_point(position=position_jitter(seed=2,width=0.15), color="#636363", size=2.5)+
   geom_point(data=a, aes(x=treatment, y=Mean), size=4, shape=18)+
-  theme_bw()+
+  theme_classic()+
   theme(axis.title.x=element_blank())+
-  theme(panel.grid.major=element_line(colour="#FFFFFF"),panel.grid.minor=element_line(colour="#FFFFFF"))+
   theme(axis.text=element_text(size=12,face="bold"), axis.title=element_text(size=14,face="bold"))+
   theme(legend.position="")+
   scale_x_discrete(labels = c('Control','Longitudinal','Transplant'))+
@@ -343,11 +338,10 @@ Fig3<-ggplot(data=data1.whole, aes(x=treatment, y=PercentChangeperDay))+
 # Figure 4- Daily energy expenditure- Longitudinal was removed due to low sample size
 Fig4<-ggplot(data=data1.dee, aes(x=treatment, y=DEE))+
   geom_boxplot(outlier.shape=NA)+
-  geom_point(position=position_jitter(seed=2,width=0.15), color="gray")+
+  geom_point(position=position_jitter(seed=2,width=0.15), color="#636363", size=2.5)+
   geom_point(data=b, aes(x=treatment, y=Mean), size=4, shape=18)+
-  theme_bw()+
+  theme_classic()+
   theme(axis.title.x=element_blank())+
-  theme(panel.grid.major=element_line(colour="#FFFFFF"),panel.grid.minor=element_line(colour="#FFFFFF"))+
   theme(axis.text=element_text(size=12,face="bold"), axis.title=element_text(size=14,face="bold"))+
   theme(legend.position="")+
   scale_x_discrete(labels = c('Control', 'Transplant'))+
@@ -363,12 +357,11 @@ Fig4<-ggplot(data=data1.dee, aes(x=treatment, y=DEE))+
 # Figure 5- Stress Response
 Fig5<-ggplot(data=CortData, aes(x=Treatment, y=Cort, fill=Time))+
   geom_boxplot(outlier.shape=NA)+
-  geom_point(position=position_jitterdodge(seed=2), color="gray")+
+  geom_point(position=position_jitterdodge(seed=2), color="#636363", size=2.5)+
   scale_fill_grey(start=0.4, end=1)+
   geom_point(data=cort.m, aes(x=Treatment, y=Cort, shape=Time), size=4, shape=18, position=position_dodge(.75))+
-  theme_bw()+
+  theme_classic()+
   theme(axis.title.x=element_blank())+
-  theme(panel.grid.major=element_line(colour="#FFFFFF"),panel.grid.minor=element_line(colour="#FFFFFF"))+
   theme(axis.text=element_text(size=12,face="bold"), axis.title=element_text(size=14,face="bold"))+
   theme(legend.position=c(0.8,0.8))+
   xlab("")+
@@ -383,15 +376,14 @@ Fig5<-ggplot(data=CortData, aes(x=Treatment, y=Cort, fill=Time))+
 # Figure 6- Home range size
 Fig6<-ggplot(data=data1, aes(x=treatment, y=HR100))+
   geom_boxplot(outlier.shape=NA)+
-  geom_point(position=position_jitter(seed=2,width=0.15), color="gray")+
+  geom_point(position=position_jitter(seed=2,width=0.15), color="#636363", size=2.5)+
   geom_point(data=HR.m, aes(x=treatment, y=HR100), size=4, shape=18)+
-  theme_bw()+
+  theme_classic()+
   theme(axis.title.x=element_blank())+
-  theme(panel.grid.major=element_line(colour="#FFFFFF"),panel.grid.minor=element_line(colour="#FFFFFF"))+
   theme(axis.text=element_text(size=12,face="bold"), axis.title=element_text(size=14,face="bold"))+
   theme(legend.position="bottom")+
   xlab("")+
-  ylab("Home Range (m^2)")+
+  ylab("Home Range (m²)")+
   annotate("text",
            x = c(1, 2, 3),
            y = c(750,1700, 2200),
@@ -404,9 +396,8 @@ Fig6<-ggplot(data=data1, aes(x=treatment, y=HR100))+
 dataPlot.1<-subset(dataPlot, variable=="full sun")
 Fig7<-ggplot(data=dataPlot.1, aes(x=Treatment, y=mean, ymin=dataPlot.1$'2.5%', ymax=dataPlot.1$'97.5%'))+
   geom_point(size=4, position=position_dodge(width=0.5))+
-  theme_bw()+
+  theme_classic()+
   theme(axis.title.x=element_blank())+
-  theme(panel.grid.major=element_line(colour="#FFFFFF"),panel.grid.minor=element_line(colour="#FFFFFF"))+
   theme(axis.text=element_text(size=12,face="bold"), axis.title=element_text(size=14,face="bold"))+
   theme(legend.position="bottom")+
   geom_linerange(position = position_dodge(.5))+
@@ -421,6 +412,6 @@ Fig7<-ggplot(data=dataPlot.1, aes(x=Treatment, y=mean, ymin=dataPlot.1$'2.5%', y
 # Physiological and Behavioral Panel Plot- New Figure 2
 Panel=plot_grid(Fig3, Fig4, Fig5, Fig6, Fig7,
                        labels = "AUTO", ncol = 2, nrow=3, align="v")
-#ggsave(path=path,"PanelFigure2.jpeg", width=10, height=15, plot=Panel)
+ggsave(path=path,"PanelFigure2.jpeg", width=10, height=15, plot=Panel)
 
 
