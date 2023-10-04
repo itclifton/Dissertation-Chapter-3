@@ -38,20 +38,23 @@ a<-aggregate(PercentChangeperDay~treatment, mean, data=data1.whole)
 a.se<-aggregate(PercentChangeperDay~treatment, st.err, data=data1.whole)
 a$SE<-a.se$PercentChangeperDay
 colnames(a)<-c("treatment","Mean","SE")
+mean(data1.whole$PercentChangeperDay)
+st.err(data1.whole$PercentChangeperDay)
 
 m1=aov(PercentChangeperDay~treatment, data=data1.whole)
 summary(m1)
 TukeyHSD(m1)
 
-summary(lm(g.day~ReleaseMass, data=data1.whole))
-m2=aov(g.day~treatment, data=data1.whole)
-summary(m2)
-em.m2<-emmeans(m2, c("treatment"))
-summary(em.m2)
-contrast(em.m2, 'tukey')
+# summary(lm(g.day~ReleaseMass, data=data1.whole))
+# m2=aov(g.day~treatment, data=data1.whole)
+# summary(m2)
+# em.m2<-emmeans(m2, c("treatment"))
+# summary(em.m2)
+# contrast(em.m2, 'tukey')
 
 # Tolerance acclimation
 data1.whole.TA<-subset(data1.whole, id!="2001" & id!="2004") # 2001 was stressed before CTmax trial and 2004 was injured during tracking
+
 # Change in CTmax
 mean(data1.whole.TA$InitialMax)
 st.err(data1.whole.TA$InitialMax)
@@ -61,6 +64,9 @@ st.err(data1.whole.TA$FinalMax)
 aggregate(ChangeInMax~treatment, length, data=data1.whole.TA)
 aggregate(ChangeInMax~treatment, mean, data=data1.whole.TA)
 aggregate(ChangeInMax~treatment, st.err, data=data1.whole.TA)
+mean(data1.whole.TA$ChangeInMax)
+st.err(data1.whole.TA$ChangeInMax)
+
 summary(aov(ChangeInMax~treatment, data=data1.whole.TA))
 shapiro.test(data1.whole.TA$ChangeInMax)
 bartlett.test(ChangeInMax~treatment, data=data1.whole.TA)
@@ -73,7 +79,10 @@ mean(data1.whole.TA$FinalMin)
 st.err(data1.whole.TA$FinalMin)
 aggregate(ChangeInMin~treatment, length, data=data1.whole.TA)
 aggregate(ChangeInMin~treatment, mean, data=data1.whole.TA)
-aggregate(ChangeInMin~treatment, length, data=data1.whole.TA)
+aggregate(ChangeInMin~treatment, st.err, data=data1.whole.TA)
+mean(data1.whole.TA$ChangeInMin)
+st.err(data1.whole.TA$ChangeInMin)
+
 summary(aov(ChangeInMin~treatment, data=data1.whole.TA))
 shapiro.test(data1.whole.TA$ChangeInMin)
 bartlett.test(ChangeInMin~treatment, data=data1.whole.TA)
@@ -86,6 +95,8 @@ aggregate(HR100~treatment, length, data=data1)
 colnames(Hr.se)[2]<-"SE"
 HR.m$SE<-Hr.se$SE
 colnames(HR.m)[2]<-"HR100"
+mean(data1$HR100, na.rm=T)
+sd(data1$HR100, na.rm=T)/sqrt(18)
 
 plot(lm(HR100~treatment, data=data1))
 
@@ -96,7 +107,9 @@ TukeyHSD(aov.HR)
 # Movement
 aggregate(SumDailyMovement~treatment, mean, data=data1)
 aggregate(SumDailyMovement~treatment, st.err, data=data1)
-aggregate(AvgDailyMovement~treatment, length, data=data1)
+aggregate(SumDailyMovement~treatment, length, data=data1)
+mean(data1$SumDailyMovement, na.rm=T)
+sd(data1$SumDailyMovement, na.rm=T)/sqrt(18)
 
 plot(lm(SumDailyMovement~treatment, data=data1))
 summary(aov(SumDailyMovement~treatment, data=data1))
@@ -110,6 +123,8 @@ b.se<-aggregate(DEE~treatment, st.err, data=data1.dee)
 b$SE<-b.se$DEE
 colnames(b)<-c("treatment","Mean","SE")
 aggregate(DEE~treatment, length, data=data1.dee)
+mean(data1.dee$DEE, na.rm=T)
+sd(data1.dee$DEE, na.rm=T)/sqrt(8)
 
 t.test(DEE~treatment, data=data1.dee)
 
@@ -121,6 +136,9 @@ aggregate(Cort~Time+Treatment, range, data=CortData)
 cort.m<-aggregate(Cort~Time+Treatment, mean, data=CortData)
 cort.se<-aggregate(Cort~Time+Treatment, st.err, data=CortData)
 cort.m$SE<-cort.se$Cort
+
+aggregate(Cort~Time, mean, data=CortData)
+aggregate(Cort~Time, st.err, data=CortData)
 
 m3<-lmer(Cort~Time+Treatment+(1|ID), data=CortData)
 em.m3<-emmeans(m3, c("Time"))
@@ -177,10 +195,15 @@ Inv.Low<-subset(InvertData, Site=="Transplant")
 
 # High
 H.sum<-sum(Inv.High$Abundance)
-abs(sum(log(Inv.High$Abundance/H.sum)*(Inv.High$Abundance/H.sum))) # 0.4764601
+abs(sum(log(Inv.High$Abundance/H.sum)*(Inv.High$Abundance/H.sum))) # 0.4764601 Shannon's
+mean(Inv.High$Abundance)
+st.err(Inv.High$Abundance)
+
 # Low
 L.sum<-sum(Inv.Low$Abundance)
-abs(sum(log(Inv.Low$Abundance/L.sum)*(Inv.Low$Abundance/L.sum))) # 0.9110963
+abs(sum(log(Inv.Low$Abundance/L.sum)*(Inv.Low$Abundance/L.sum))) # 0.9110963 Shannon's
+mean(Inv.Low$Abundance)
+st.err(Inv.Low$Abundance)
 
 ## Light-level data ----
 # Modified from Refsnider et al., 2018- https://github.com/songsqian/lizards
@@ -351,7 +374,7 @@ Fig4<-ggplot(data=data1.dee, aes(x=treatment, y=DEE))+
            label = c("A", "B"), fontface="bold",
            size=6)+
   xlab("Treatment Group")+
-  ylab("DEE (J-g-d)")
+  ylab(bquote(bold('DEE (J' *~g^-1~day^-1*')')))
 #ggsave(path=path, filename="DEE.jpeg", width=5, height=5, plot=Fig4)
 
 # Figure 5- Stress Response
@@ -370,7 +393,12 @@ Fig5<-ggplot(data=CortData, aes(x=Treatment, y=Cort, fill=Time))+
            x = c(1, 2, 3),
            y = c(14, 25.5, 11.5),
            label = c("*", "*", "*"),
-           size=10)
+           size=10)+
+  annotate("text",
+           x = c(1, 2, 3),
+           y = c(28, 32, 17),
+           label = c("A", "A", "A"), fontface="bold",
+           size=6)
 #ggsave(path=path, filename="Cort.jpeg", width=5, height=5, plot=Fig5)
 
 # Figure 6- Home range size
@@ -405,13 +433,111 @@ Fig7<-ggplot(data=dataPlot.1, aes(x=Treatment, y=mean, ymin=dataPlot.1$'2.5%', y
   annotate("text",
            x = c(1, 2, 3),
            y = c((dataPlot.1[1,11]+(0.002)), (dataPlot.1[2,11]+0.002), (dataPlot.1[3,11]+0.002)),
-           label = c("A", "A", "B"),
+           label = c("A", "A", "B"), fontface="bold",
            size=6)
 #ggsave(path=path, "Fig7.jpeg", width=5, height=5, plot=Fig7)
 
 # Physiological and Behavioral Panel Plot- New Figure 2
 Panel=plot_grid(Fig3, Fig4, Fig5, Fig6, Fig7,
                        labels = "AUTO", ncol = 2, nrow=3, align="v")
-ggsave(path=path,"PanelFigure2.jpeg", width=10, height=15, plot=Panel)
+#ggsave(path=path,"PanelFigure2.jpeg", width=10, height=15, plot=Panel)
 
+## Reviewer Comments ----
+aggregate(ReleaseMass~treatment, length, data=data1.whole)
+aggregate(ReleaseMass~treatment, mean, data=data1.whole)
+aggregate(ReleaseMass~treatment, st.err, data=data1.whole)
 
+aggregate(RecoveredMass~treatment, length, data=data1.whole)
+aggregate(RecoveredMass~treatment, mean, data=data1.whole)
+aggregate(RecoveredMass~treatment, st.err, data=data1.whole)
+
+aggregate(PercentChangeperDay~treatment, length, data=data1.whole)
+aggregate(PercentChangeperDay~treatment, mean, data=data1.whole)
+aggregate(PercentChangeperDay~treatment, st.err, data=data1.whole)
+
+cort.1<-c(7.833,
+          3.142,
+          11.145,
+          4.719,
+          3.06,
+          5.854,
+          6.065,
+          12.659,
+          1.099,
+          7.045,
+          4.454,
+          7.656,
+          2.221,
+          6.732,
+          7.964,
+          10.954)
+time.1<-c("AM",
+          "AM",
+          "AM",
+          "AM",
+          "PM",
+          "PM",
+          "PM",
+          "PM",
+          "PM",
+          "PM",
+          "PM",
+          'AM',
+          "AM",
+          "PM",
+          "AM",
+          'AM')
+summary(aov(as.numeric(cort.1)~time.1, time.2))
+aggregate(as.numeric(cort.1)~time.1, mean, data=time.2)
+
+# Requested CORT Supplemental
+SuppCORT<-read.csv("CORTSupplemental.csv")
+
+summary(lm(CORT~Time, data=SuppCORT))
+s1<-ggplot(aes(x=Time, y=CORT), data=SuppCORT)+
+  geom_point(size=2)+
+  geom_smooth(method="lm", se=F, color="black")+
+  theme_classic()+
+  theme(axis.text=element_text(size=20,face="bold"), axis.title=element_text(size=22,face="bold"),
+        legend.text=element_text(size=22, face="bold"), legend.title=element_text(size=25, face="bold", hjust=0.5))+
+  theme(axis.ticks.length.y=unit(.5, "cm"), axis.ticks.y=element_line(size=1.75), axis.line=element_line(size=1.75))+
+  theme(legend.position = c(.75, .2), plot.margin = margin(11, 5.5, 5.5, 5.5, "pt"))+
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 15), breaks=seq(0,15,5))+
+  ylab("Corticosterone (ng/mL)")+
+  xlab("Time to Draw (s)")
+
+summary(lm(CORT~Tb, data=SuppCORT))
+s2<-ggplot(aes(x=Tb, y=CORT), data=SuppCORT)+
+  geom_point(size=2)+
+  geom_smooth(method="lm", se=F, color="black")+
+  theme_classic()+
+  theme(axis.text=element_text(size=20,face="bold"), axis.title=element_text(size=22,face="bold"),
+        legend.text=element_text(size=22, face="bold"), legend.title=element_text(size=25, face="bold", hjust=0.5))+
+  theme(axis.ticks.length.y=unit(.5, "cm"), axis.ticks.y=element_line(size=1.75), axis.line=element_line(size=1.75))+
+  theme(legend.position = c(.75, .2), plot.margin = margin(11, 5.5, 5.5, 5.5, "pt"))+
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 15), breaks=seq(0,15,5))+
+  ylab("Corticosterone (ng/mL)")+
+  xlab("Body Temperature (°C)")
+
+summary(aov(CORT~TimePeriod, data=SuppCORT))
+s3<-ggplot(data=SuppCORT, aes(x=TimePeriod, y=CORT))+
+  geom_boxplot(outlier.shape=NA)+
+  geom_point(position=position_jitter(seed=2,width=0.15), color="#636363", size=2.5)+
+  theme_classic()+
+  theme(axis.text=element_text(size=20,face="bold"), axis.title=element_text(size=22,face="bold"),
+        legend.text=element_text(size=22, face="bold"), legend.title=element_text(size=25, face="bold", hjust=0.5))+
+  theme(axis.ticks.length.y=unit(.5, "cm"), axis.ticks.y=element_line(size=1.75), axis.line=element_line(size=1.75))+
+  theme(legend.position = c(.75, .2), plot.margin = margin(11, 5.5, 5.5, 5.5, "pt"))+
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 15), breaks=seq(0,15,5))+
+  theme(legend.position="")+
+  scale_x_discrete(labels = c('AM','PM'))+
+  annotate("text",
+           x = c(1, 2),
+           y = c(12.95, 12.95),
+           label = c("A", "A"), fontface="bold",
+           size=6)+
+  xlab("Time of Day")+
+  ylab("Corticosterone (ng/mL)")
+PanelSupp=plot_grid(s1, s2, s3,
+                labels = "AUTO", ncol = 3, nrow=1, align="v")
+ggsave(path=path,"SuppFig1.jpeg", width=15, height=10, plot=PanelSupp)
